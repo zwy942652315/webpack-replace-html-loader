@@ -19,10 +19,11 @@ module.exports = (options = {}) => ({
   module: {
     rules: [{
         test: /\.vue$/,
-        use: ['vue-loader',
+        use: ['vue-loader', 
           {
             // 因为该loader还没有上传的npm，所以要指定该loader的路径，才能使用
-            loader: path.resolve(__dirname, './replace-html-loader.js'),
+            // loader: path.resolve(__dirname, './replace-html-loader.js'),
+            loader: 'replace-html-loader',
             options: {
               key: 'include'
             },

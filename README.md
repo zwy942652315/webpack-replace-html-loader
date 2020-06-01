@@ -166,6 +166,8 @@ module.exports = function(source) {
 }
 ```
 
+### 使用本地loader
+
 webpack的config增加loader配置：
 
 ```js
@@ -253,4 +255,105 @@ list.html里面的内容可以使用当前Vue组件中的变量
 
 效果图：
 
-![](https://user-gold-cdn.xitu.io/2020/6/1/1726bc6cb68e9412?w=1510&h=575&f=png&s=39647)
+![](https://user-gold-cdn.xitu.io/2020/6/1/172707ce2cd2fee8?w=1510&h=575&f=png&s=39647)
+
+## 发布到npm
+
+### 创建 npm 包模块
+
+创建npm包目录
+
+```shell
+mkdir replace-html-loader
+```
+
+初始化loader
+
+```shell
+npm init
+```
+
+该命令会一步一步提示输入该loader的信息，最后会生成一个 package.json 文件
+
+完整如下：
+
+```json
+{
+  "name": "replace-html-loader",
+  "version": "1.0.5",
+  "description": "A defined webpack loader, replace html template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "loader-utils": "^2.0.0"
+  },
+  "keywords": [
+    "webpack",
+    "loader"
+  ],
+  "author": "wenyan",
+  "license": "ISC"
+}
+```
+
+其中，由 main 属性可以看出，入口文件为 index.js，把之前 replace-html-loader.js 的内容赋值到该文件
+
+至此，该loader 的npm 包已经完成，开始正式发布到npm
+
+### 注册npm账号
+
+去 npm 官网 https://www.npmjs.com/ ，注册一个账号，要进行邮箱验证
+
+注册完成后，就可以添加npm账号了
+
+```shell
+npm adduser
+```
+
+### 登录 [npm](https://www.npmjs.com/)
+
+```shell
+npm login
+```
+
+### 发布
+
+```
+npm publish
+```
+
+注意：如果是多次修改npm包，发布时要修改package.json的 version 版本号
+
+## 在项目中使用npm的loader
+
+在项目根目录执行
+
+```shell
+npm i replace-html-loader
+```
+
+webpack.config.js
+
+```js
+{
+  test: /\.vue$/,
+  use: ['vue-loader', 
+    {
+      // 因为该loader还没有上传的npm，所以要指定该loader的路径，才能使用
+      // loader: path.resolve(__dirname, './replace-html-loader.js'),
+      loader: 'replace-html-loader',
+      options: {
+        key: 'include'
+      },
+    }
+  ]
+}
+```
+
+现在已经不需要指定该loader的路径，就能和其他loader一样直接使用了
+
+## 最后
+
+编写一个loader其实很简单，如果是功能比较复杂，可能就会有点棘手。但总的来说，如果在实际的项目中，遇到问题，无法找到合适的解决方案，就只能自己动手，丰衣足食。认识了loader之后，你解决问题的能力，那就不仅仅停留在框架本身了，还可以通过构建工具来解决问题。

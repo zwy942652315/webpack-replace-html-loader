@@ -1,11 +1,15 @@
 const fs = require('fs')
 const path = require('path')
 const loaderUtils = require('loader-utils')
+// 默认defaultOptions
+const defaultOptions = {
+  key: 'layout'
+}
 module.exports = function(source) {
   // 关闭该 Loader 的缓存功能
   this.cacheable(false)
   // 获取到用户给当前 Loader 传入的 options
-  const options = loaderUtils.getOptions(this)
+  const options = Object.assign(defaultOptions, loaderUtils.getOptions(this))
   const { key } = options
   const reg = new RegExp(`(@${key}\\()(.*?)\\)`)
   const regResult = reg.exec(source)
